@@ -117,3 +117,17 @@ Este laboratorio se utiliza para consolidar conocimientos relacionados con:
 #### Estado
 
 Proyecto activo y en evolución continua.
+
+---
+
+#### Roadmap
+
+- [x] Raspberry Pi Setup
+- [x] SSH Administration
+- [x] Docker Compose
+- [x] PostgreSQL
+- [x] Tailscale
+- [x] Maintenance
+- [ ] Reverse Proxy (Nginx)
+- [ ] Monitoring
+- [ ] Automated Backups
