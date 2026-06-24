@@ -42,7 +42,7 @@ Uno de los aspectos más importantes fue la incorporación de volúmenes persist
 
 Sin persistencia, los datos almacenados en la base de datos se perderían al eliminar el contenedor.
 
-```
+```text
 PostgreSQL
       │
       ▼
@@ -63,7 +63,7 @@ Esto permite asegurar que la base de datos se encuentra disponible antes de que 
 
 Las aplicaciones desplegadas utilizan PostgreSQL como sistema principal de almacenamiento.
 
-```
+```text
 FastAPI
    │
    ▼

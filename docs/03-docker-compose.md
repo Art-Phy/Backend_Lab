@@ -28,7 +28,7 @@ Aunque Docker permite ejecutar contenedores individuales, muchas aplicaciones mo
 
 Por ejemplo:
 
-```
+```text
 Aplicación Backend
         │
         ▼
@@ -41,7 +41,7 @@ Docker Compose permite definir toda la infraestructura necesaria mediante un ún
 
 #### Arquitectura
 
-```
+```text
 Docker Compose
 │
 ├── API Backend

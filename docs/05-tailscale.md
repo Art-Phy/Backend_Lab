@@ -29,7 +29,7 @@ Entre sus principales ventajas destacan:
 
 Durante las primeras fases del laboratorio, el acceso al servidor estaba limitado a la red local.
 
-```
+```text
 Laptop
    │
    ▼
@@ -47,7 +47,7 @@ Esto impedía administrar el servidor cuando se estaba fuera de casa.
 
 Mediante Tailscale, tanto el servidor como los equipos de administración se incorporaron a una misma red privada virtual.
 
-```
+```text
 Laptop
    │
    ▼
@@ -65,7 +65,7 @@ De esta forma, ambos dispositivos pueden comunicarse independientemente de la re
 
 Una vez configurado Tailscale, el acceso al servidor puede realizarse utilizando su dirección IP privada asignada dentro de la red.
 
-```
+```bash
 ssh usuario@100.x.x.x
 ```
 
