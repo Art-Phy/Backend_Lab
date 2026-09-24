@@ -25,7 +25,7 @@ docker exec "$CONTAINER_NAME" \
     -Fc \
     > "$BACKUP_FILE"
 
-if [[ ! -s "$BACKUP_FILE "]]; then
+if [[ ! -s "$BACKUP_FILE " ]]; then
     echo "[ERROR] Backup file is empty."
     rm -f "$BACKUP_FILE"
     exit 1
