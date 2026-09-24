@@ -7,7 +7,7 @@ set -euo pipefail
 
 BACKUP_DIR="$HOME/backups/postgresql"
 CONTAINER_NAME="url-shortener-postgres"
-DB_NAME="url-shortener"
+DB_NAME="url_shortener"
 DB_USER="arturo_api"
 MAX_BACKUP=2
 
