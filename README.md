@@ -1,14 +1,21 @@
-
 ### Backend Lab
 
 <p align="left">
+
   <img src="https://img.shields.io/badge/Raspberry%20Pi-Backend%20Lab-C51A4A" />
+
   <img src="https://img.shields.io/badge/Linux-Debian%20Based-blue" />
+
   <img src="https://img.shields.io/badge/Docker-Compose-2496ED" />
+
   <img src="https://img.shields.io/badge/PostgreSQL-Database-336791" />
+
   <img src="https://img.shields.io/badge/Tailscale-Remote%20Access-242424" />
+
   <img src="https://img.shields.io/badge/Status-Active-success" />
+
   <img src="https://img.shields.io/badge/License-MIT-lightgrey" />
+
 </p>
 
 Laboratorio personal de infraestructura backend construido sobre una Raspberry Pi.
@@ -23,6 +30,7 @@ Este proyecto documenta la configuración, despliegue y mantenimiento de un ento
 - Practicar administración básica de sistemas Linux.
 - Desplegar APIs utilizando Docker Compose.
 - Gestionar bases de datos PostgreSQL.
+- Implementar copias de seguridad automatizadas.
 - Acceder de forma segura mediante SSH y Tailscale.
 - Simular flujos de trabajo similares a entornos profesionales.
 
@@ -41,12 +49,13 @@ Este proyecto documenta la configuración, despliegue y mantenimiento de un ento
 - Git
 - GitHub
 - SSH
+- systemd
 
 ---
 
 #### Arquitectura General
 
-```
+```text
       Laptop
         │
         │ GitHub
@@ -56,8 +65,8 @@ Este proyecto documenta la configuración, despliegue y mantenimiento de un ento
  ┌──────┴──────┐
  │             │
 Docker      PostgreSQL
- │
-FastAPI
+ │             │
+FastAPI      Backups
 ```
 
 ---
@@ -69,6 +78,7 @@ FastAPI
 - Raspberry Pi OS Lite
 - Acceso remoto mediante SSH
 - Actualizaciones y mantenimiento del sistema
+- Zona horaria configurada en `Europe/Madrid`
 
 ##### Contenedores
 
@@ -81,6 +91,10 @@ FastAPI
 - PostgreSQL en contenedor
 - Volúmenes persistentes
 - Healthchecks
+- Backups mediante `pg_dump`
+- Validación mediante `pg_restore`
+- Retención automática de los dos backups más recientes
+- Backup automático durante apagados y reinicios mediante systemd
 
 ##### Redes y Acceso
 
@@ -98,6 +112,7 @@ FastAPI
 - [PostgreSQL](docs/04-postgresql.md)
 - [Tailscale](docs/05-tailscale.md)
 - [Mantenimiento](docs/06-maintenance.md)
+- [Backups de PostgreSQL](docs/07-postgresql-backups.md)
 
 ---
 
@@ -109,6 +124,8 @@ Este laboratorio se utiliza para consolidar conocimientos relacionados con:
 - Redes
 - Docker
 - Bases de datos
+- Backups y restauración de datos
+- systemd
 - Despliegue de aplicaciones
 - Administración de servidores
 
@@ -128,6 +145,6 @@ Proyecto activo y en evolución continua.
 - [x] PostgreSQL
 - [x] Tailscale
 - [x] Maintenance
+- [x] Automated Backups
 - [ ] Reverse Proxy (Nginx)
 - [ ] Monitoring
-- [ ] Automated Backups
