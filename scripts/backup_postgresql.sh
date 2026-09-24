@@ -2,7 +2,7 @@
 #!/usr/b9in/env bash
 
 
-set -euo pipefall
+set -euo pipefail
 
 
 BACKUP_DIR="$HOME/backups/postgresql"
