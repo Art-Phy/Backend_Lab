@@ -1,0 +1,18 @@
+[project]
+name = "backend-lab-dashboard"
+version = "0.1.0"
+description = "Hardware monitoring dashboard for Backend Lab"
+requires-python = ">=3.13"
+
+dependencies = [
+    "Pillow>=12.0,<13.0",
+    "numpy>=2.5,<3.0",
+    "pyserial>=3.5,<4.0",
+]
+
+[project.scripts]
+backend-dashboard = "backend_dashboard.main:main"
+
+[build-system]
+requires = ["setuptools>=80"]
+build-backend = "setuptools.build_meta"
