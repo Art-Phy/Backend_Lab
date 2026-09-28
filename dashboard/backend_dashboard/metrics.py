@@ -18,28 +18,15 @@ class SystemMetrics:
 
 
 def get_cpu_temperature() -> float | None:
-    try:
-        result = subprocess.run(
-           ["vcgencmd", "measure_temp"],
-           capture_output=True,
-           text=True,
-           check=True, 
-        )
-    except (FileNotFoundError, subprocess.CalledProcessError):
-        return None
-
-    output = result.stdout.strip()
-
-    if "=" not in output:
-        return None
+    thermal_path = "/sys/class/thermal/thermal_zone0/temp"
 
     try:
-        return float(
-            output.split("=", 1)[1]
-            .replace("'C", "")
-        )
-    except ValueError:
+        with open(thermal_path, "r", encoding="utf-8") as file:
+            value = int(file.read().strip())
+    except (FileNotFoundError, ValueError, OSError):
         return None
+
+    return value / 1000
 
 
 
