@@ -1,3 +1,4 @@
+import importlib
 import os
 import sys
 from pathlib import Path
@@ -8,7 +9,6 @@ from PIL import Image
 DISPLAY_WIDTH = 320
 DISPLAY_HEIGHT = 480
 DEFAULT_PORT = "/dev/ttyACM0"
-
 
 
 class Display:
@@ -34,18 +34,18 @@ class Display:
 
         sys.path.insert(0, str(driver_root))
 
-        from library.lcd.lcd_comm_rev_a import (
-            LcdCommRevA,
-            Orientation,
+        module = importlib.import_module(
+            "library.lcd.lcd_comm_rev_a"
         )
 
-        self._orientation = Orientation
-        self._lcd = LcdCommRevA(
+        lcd_comm_class = module.LcdCommRevA
+        self._orientation = module.Orientation
+
+        self._lcd = lcd_comm_class(
             com_port=self.port,
             display_width=DISPLAY_WIDTH,
             display_height=DISPLAY_HEIGHT,
         )
-
 
     def initialize(self) -> None:
         self._lcd.Reset()
@@ -54,7 +54,6 @@ class Display:
         self._lcd.SetOrientation(
             orientation=self._orientation.PORTRAIT
         )
-
 
     def show(self, image: Image.Image) -> None:
         if image.size != (DISPLAY_WIDTH, DISPLAY_HEIGHT):
