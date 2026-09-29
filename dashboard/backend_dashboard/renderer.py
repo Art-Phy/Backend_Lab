@@ -32,6 +32,8 @@ def format_uptime(seconds: float) -> str:
     if days > 0:
         return f"{days}d {hours:02}h {minutes:02}m"
 
+    return f"{hours:02}h {minutes:02}m"
+
 
 
 def format_temperature(temperature: float | None) -> str:
