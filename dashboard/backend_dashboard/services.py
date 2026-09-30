@@ -14,7 +14,7 @@ class ServiceStatus:
 def is_systemd_service_active(service: str) -> bool:
     try:
         result = subprocess.run(
-            ["systemctl", "os-active", "--quiet", service],
+            ["systemctl", "is-active", "--quiet", service],
             capture_output=True,
         )
     except FileNotFoundError:
