@@ -1,6 +1,7 @@
 from PIL import Image, ImageDraw, ImageFont
 
 from backend_dashboard.metrics import SystemMetrics
+from backend_dashboard.services import ServiceStatus
 
 
 WIDTH = 320
@@ -10,6 +11,7 @@ BACKGROUND = (15, 23, 42)
 TEXT_PRIMARY = (241, 245, 249)
 TEXT_SECONDARY = (148, 163, 184)
 STATUS_OK = (34, 197, 94)
+STATUS_ERROR = (239, 68, 68)
 BAR_BACKGROUND = (51, 65, 85)
 BAR_FILL = (56, 189, 248)
 
@@ -45,16 +47,16 @@ def format_temperature(temperature: float | None) -> str:
 
 
 def draw_metric_bar(
-        draw: ImageDraw.ImageDraw,
-        label: str,
-        value: float,
-        y: int,
-        font: ImageFont.FreeTypeFont | ImageFont.ImageFont,
+    draw: ImageDraw.ImageDraw,
+    label: str,
+    value: float,
+    y: int,
+    font: ImageFont.FreeTypeFont | ImageFont.ImageFont,
 ) -> None:
     left = 30
-    right = WIDTH -30
-    bar_top = y + 25
-    bar_height = 10
+    right = WIDTH - 30
+    bar_top = y + 22
+    bar_height = 8
 
     display_value = max(0.0, min(value, 100.0))
 
@@ -78,7 +80,7 @@ def draw_metric_bar(
 
     draw.rounded_rectangle(
         (left, bar_top, right, bar_top + bar_height),
-        radius=5,
+        radius=4,
         fill=BAR_BACKGROUND,
     )
 
@@ -92,19 +94,46 @@ def draw_metric_bar(
                 left + fill_width,
                 bar_top + bar_height,
             ),
-            radius=5,
+            radius=4,
             fill=BAR_FILL,
         )
 
 
 
-def create_dashboard_frame(metrics: SystemMetrics) -> Image.Image:
+def draw_service_status(
+    draw: ImageDraw.ImageDraw,
+    label: str,
+    is_ok: bool,
+    y: int,
+    font: ImageFont.FreeTypeFont | ImageFont.ImageFont,
+) -> None:
+    status_color = STATUS_OK if is_ok else STATUS_ERROR
+
+    draw.text(
+        (30, y),
+        label,
+        font=font,
+        fill=TEXT_SECONDARY,
+    )
+
+    draw.ellipse(
+        (270, y + 3, 280, y + 13),
+        fill=status_color,
+    )
+
+
+
+def create_dashboard_frame(
+    metrics: SystemMetrics,
+    services: ServiceStatus,
+) -> Image.Image:
     image = Image.new("RGB", (WIDTH, HEIGHT), BACKGROUND)
     draw = ImageDraw.Draw(image)
 
     title_font = load_font(26)
-    metric_font = load_font(16)
-    info_font = load_font(15)
+    metric_font = load_font(15)
+    info_font = load_font(14)
+    service_font = load_font(13)
 
     title = "BACKEND LAB"
 
@@ -112,19 +141,19 @@ def create_dashboard_frame(metrics: SystemMetrics) -> Image.Image:
     title_width = title_box[2] - title_box[0]
 
     draw.text(
-        ((WIDTH - title_width) // 2, 35),
+        ((WIDTH - title_width) // 2, 25),
         title,
         font=title_font,
         fill=TEXT_PRIMARY,
     )
 
     draw.ellipse(
-        (29, 86, 41, 98),
+        (29, 72, 41, 84),
         fill=STATUS_OK,
     )
 
     draw.text(
-        (52, 82),
+        (52, 68),
         "SYSTEM ONLINE",
         font=metric_font,
         fill=STATUS_OK,
@@ -134,7 +163,7 @@ def create_dashboard_frame(metrics: SystemMetrics) -> Image.Image:
         draw,
         "CPU",
         metrics.cpu_percent,
-        130,
+        110,
         metric_font,
     )
 
@@ -142,7 +171,7 @@ def create_dashboard_frame(metrics: SystemMetrics) -> Image.Image:
         draw,
         "RAM",
         metrics.memory_percent,
-        195,
+        165,
         metric_font,
     )
 
@@ -150,43 +179,75 @@ def create_dashboard_frame(metrics: SystemMetrics) -> Image.Image:
         draw,
         "DISK",
         metrics.disk_percent,
-        260,
+        220,
         metric_font,
     )
 
     draw.text(
-        (30, 340),
+        (30, 290),
         "TEMP",
         font=info_font,
         fill=TEXT_SECONDARY,
     )
 
     draw.text(
-        (165, 340),
+        (165, 290),
         format_temperature(metrics.temperature_c),
         font=info_font,
         fill=TEXT_PRIMARY,
     )
 
     draw.text(
-        (30, 380),
+        (30, 320),
         "UPTIME",
         font=info_font,
         fill=TEXT_SECONDARY,
     )
 
     draw.text(
-        (165, 380),
+        (165, 320),
         format_uptime(metrics.uptime_seconds),
         font=info_font,
         fill=TEXT_PRIMARY,
     )
 
     draw.text(
-        (30, 430),
-        "Raspberry Pi Server",
+        (30, 360),
+        "INFRA",
         font=info_font,
-        fill=TEXT_SECONDARY,
+        fill=TEXT_PRIMARY,
+    )
+
+    draw_service_status(
+        draw,
+        "NGINX",
+        services.nginx,
+        390,
+        service_font,
+    )
+
+    draw_service_status(
+        draw,
+        "DOCKER",
+        services.docker,
+        410,
+        service_font,
+    )
+
+    draw_service_status(
+        draw,
+        "POSTGRES",
+        services.postgres,
+        430,
+        service_font,
+    )
+
+    draw_service_status(
+        draw,
+        "BACKUP",
+        services.backup,
+        450,
+        service_font,
     )
 
     return image
@@ -195,9 +256,12 @@ def create_dashboard_frame(metrics: SystemMetrics) -> Image.Image:
 
 if __name__ == "__main__":
     from backend_dashboard.metrics import collect_system_metrics
+    from backend_dashboard.services import collect_service_status
 
     metrics = collect_system_metrics()
-    frame = create_dashboard_frame(metrics)
+    services = collect_service_status()
+
+    frame = create_dashboard_frame(metrics, services)
     frame.save("dashboard-preview.png")
 
     print("Dashboard preview generated: dashboard-preview.png")
