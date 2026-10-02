@@ -18,7 +18,11 @@ class Display:
         driver_path: str | None = None,
     ) -> None:
         self.port = port
-        self.driver_path = driver_path or os.getenv("TURING_DRIVER_PATH")
+        self.driver_path = (
+            driver_path
+            or os.getenv("TURING_DRIVER_PATH")
+            or str(Path.home() / "turing-smart-screen-python")
+         )
 
         if not self.driver_path:
             raise RuntimeError(
