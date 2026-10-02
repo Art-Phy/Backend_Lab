@@ -2,6 +2,15 @@
 
 set -euo pipefail
 
+STATE_DIR="$HOME/.local/state/backend-lab"
+STATUS_FILE="${STATE_DIR}/backup-postgresql.status"
+
+mkdir -p "$STATE_DIR"
+
+echo "running" > "$STATUS_FILE"
+
+trap 'echo "failed" > "$STATUS_FILE"' ERR
+
 BACKUP_DIR="$HOME/backups/postgresql"
 CONTAINER_NAME="url-shortener-postgres"
 DB_NAME="url_shortener"
@@ -54,3 +63,6 @@ if (( ${#BACKUPS[@]} > MAX_BACKUPS )); then
 fi
 
 echo "[INFO] Backup process completed."
+
+echo "success" > "$STATUS_FILE"
+trap - ERR

@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from pathlib import Path
 import subprocess
 
 
@@ -25,33 +26,20 @@ def is_systemd_service_active(service: str) -> bool:
 
 
 def was_last_backup_successful() -> bool:
+    status_file = (
+        Path.home()
+        / ".local"
+        / "state"
+        / "backend-lab"
+        / "backup-postgresql.status"
+    )
+
     try:
-        result = subprocess.run(
-            [
-                "systemctl",
-                "show",
-                "backup-postgresql.service",
-                "-p",
-                "Result",
-                "-p",
-                "ExecMainStatus",
-                "--value",
-            ],
-            capture_output=True,
-            text=True,
-            check=True,
-        )
-    except (FileNotFoundError, subprocess.CalledProcessError):
+        status = status_file.read_text(encoding="utf-8").strip()
+    except OSError:
         return False
 
-    values = result.stdout.strip().splitlines()
-
-    if len(values) != 2:
-        return False
-
-    service_result, exit_status = values
-
-    return service_result == "success" and exit_status == "0"
+    return status == "success"
 
 
 
