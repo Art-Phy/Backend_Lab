@@ -1,0 +1,12 @@
+cat >> .gitignore <<'EOF'
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+
+# VSCode
+.vscode/
+EOF
+dashboard/dashboard-preview.png
