@@ -1,0 +1,17 @@
+[Unit]
+Description=Backend Lab Hardware Dashboard
+After=network.target docker.service
+Requires=docker.service
+
+[Service]
+Type=simple
+User=arturosanma
+WorkingDirectory=/home/arturosanma/infra/Backend_Lab/dashboard
+
+ExecStart=/home/arturosanma/infra/Backend_Lab/dashboard/.venv/bin/backend-dashboard
+
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
